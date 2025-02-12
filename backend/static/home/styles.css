@@ -1,0 +1,58 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-width: 100vw;
+    height: 100vh;
+    gap: 1vh;
+}
+
+#container {
+    display: flex;
+    min-width: 100vw;
+    border: 2px solid black;
+}
+
+.form-box {
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1vh
+}
+
+#register-btn {
+    justify-content: end;
+}
+
+.shorthand-box {
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#shorthand-table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 35%;
+}
+  
+#shorthand-table td, #shorthand-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#shorthand-table tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+#shorthand-table tr:hover {
+    background-color: #ddd;
+}
+
+#shorthand-table th {
+padding-top: 12px;
+padding-bottom: 12px;
+text-align: left;
+background-color: #2b4d40;
+color: white;
+}
+

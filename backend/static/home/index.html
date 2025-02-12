@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="styles.css" />
+    <title>Quick Links</title>
+</head>
+<body>
+    <div id="container" class="form-box">
+        <h3>Add your shorthands:</h3>
+        <div id="key" class="form-field">
+            <label for="key">Shorthand:</label>
+            <input type="text" id="key-input" name="key" required>
+        </div>
+        <div id="url" class="form-field">
+            <label for="value">Redirects:</label>
+            <input type="url" id="value-input" name="value" required>
+        </div>
+        <div id="register-btn">
+            <button id="submit-btn">Register</button>
+        </div>
+        <p id="response-message"></p>
+    </div>
+
+    <div id="container" class="shorthand-box">
+        <h3>List of shorthands</h3>
+        <table id="shorthand-table" border="3">
+            <thead>
+                <tr>
+                    <th>Shorthand</th>
+                    <th>URL</th>
+                    <th>Owner</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        async function getURLShorthands() {
+            try {
+                const response = await fetch("http://127.0.0.1:8000/rdr/view", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+                
+                const json = await response.json();
+                return json;
+            } catch (error) {
+                return {
+                    "shorthand": "Error",
+                    "url": "Failed to fetch data",
+                    "owner": "Sorry!"
+                }
+            }
+        }
+
+        async function populateShorthandTable() {
+            let tbody = document.querySelector("#shorthand-table tbody");
+            let data = await getURLShorthands()
+            console.log(data)
+            
+            data.forEach(({shorthand, url, owner}) => {
+                let row = tbody.insertRow();
+                row.innerHTML = `<td>${shorthand}</td>
+                                <td><a href="${url}" target="_blank">${url}</a></td>
+                                <td>${owner}</td>`;
+            });
+        }
+
+        populateShorthandTable();
+  
+        document.getElementById("submit-btn").addEventListener("click", async function(event) {
+            event.preventDefault();
+
+            const shorthand = document.getElementById("key-input").value;
+            const url = document.getElementById("value-input").value;
+
+            const responseMessage = document.getElementById("response-message");
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/rdr/add", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ shorthand, url })
+                });
+
+                const text = await response.text();
+                responseMessage.textContent = response.ok ? "Added successfully!" : `Error: ${text}`;
+                responseMessage.style.color = response.ok ? "green" : "red";
+            } catch (error) {
+                responseMessage.textContent = "Failed to send request.";
+                responseMessage.style.color = "red";
+            }
+        });
+    </script>
+</body>
+</html>
